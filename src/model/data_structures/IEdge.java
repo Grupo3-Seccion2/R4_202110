@@ -7,6 +7,6 @@ public interface IEdge<K extends Comparable<K>, V extends Comparable<V>>
 
     Vertex<K,V> getDestination();
 
-    double weight();
+    float weight();
 
 }

@@ -145,4 +145,26 @@ public class GrafoListaAdyacencia <K extends Comparable<K>, V extends Comparable
 		inicio.bfs();
 		unMark();
 	}
+	
+	private ITablaSimbolos<K, NodoTS<Float, Edge<K,V>>> minPathTree(K idOrigen)
+	{
+		Vertex<K, V> inicio = getVertex(idOrigen);
+		return inicio.minPathTree();
+	}
+	
+	public ILista<Edge<K, V>> minPath(K idOrigen, K idDestino)
+	{
+		ITablaSimbolos<K, NodoTS<Float, Edge<K,V>>> tree = minPathTree(idOrigen);
+		ILista<Edge<K, V>> path = new ArregloDinamico<Edge<K, V>>(100000);
+		K idBusqueda = idDestino;
+		NodoTS<Float, Edge<K,V>> actual;
+		
+		while((actual = tree.get(idBusqueda)) != null && actual.getValue() != null)
+		{
+			path.addLast(actual.getValue());
+			idBusqueda = actual.getValue().getOrigin().getId();
+		}
+		
+		return path;
+	}
 }

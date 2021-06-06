@@ -2,7 +2,7 @@ package model.data_structures;
 
 public class Edge <K extends  Comparable<K>,V extends Comparable<V>> implements IEdge<K, V>, Comparable<Edge<K, V>>
 {
-	private double weight;
+	private float weight;
 	
 	private Vertex<K,V> origin;
 	
@@ -10,7 +10,7 @@ public class Edge <K extends  Comparable<K>,V extends Comparable<V>> implements 
 	
 	private int numberOfTrips;
 
-	public Edge(Vertex<K,V> origin, Vertex<K,V>destination, double weight){
+	public Edge(Vertex<K,V> origin, Vertex<K,V>destination, float weight){
 		this.weight = weight;
 		this.origin = origin;
 		this.destination = destination;
@@ -26,13 +26,13 @@ public class Edge <K extends  Comparable<K>,V extends Comparable<V>> implements 
 		return destination;
 	}
 
-	public double weight() 
+	public float weight() 
 	{
 		return weight;
 	}
 
 
-	public void setWeight(double weight) 
+	public void setWeight(float weight) 
 	{
 		this.weight = weight;
 	}

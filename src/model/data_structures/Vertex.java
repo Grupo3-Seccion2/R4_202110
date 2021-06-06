@@ -132,5 +132,58 @@ public class Vertex <K extends  Comparable<K>,V extends Comparable<V>> implement
 		}
 	}
 	
+	public boolean mark()
+	{
+		return this.marked= true;
+	}
+
+	public ITablaSimbolos<K, NodoTS<Float, Edge<K, V>>> minPathTree() {
+		ITablaSimbolos<K, NodoTS<Float, Edge<K, V>>> tabla = new TablaHashLinearProbing<K, NodoTS<Float, Edge<K, V>>>(1000, 0.5);
+		MinPQIndexada<Float, K, Edge<K, V>> colaIndx = new MinPQIndexada<Float, K, Edge<K, V>>(1000);
+		
+		tabla.put(this.id, new NodoTS<Float, Edge<K,V>>(0f, null));
+		relax(tabla, colaIndx, this, 0);
+		while(!colaIndx.isEmpty())
+		{
+			NodoTS<Float, Edge<K,V>> actual = colaIndx.delMin();
+			Edge<K, V> arcoAct = actual.getValue();
+			float pesoAct = actual.getKey();
+			relax(tabla, colaIndx, arcoAct.getDestination(), pesoAct);
+		}
+			
+		return tabla;
+	}
+	
+	public void relax(ITablaSimbolos<K, NodoTS<Float, Edge<K, V>>> tablaResultado, MinPQIndexada<Float, K, Edge<K, V>> colaIndexada, Vertex<K, V> actual, float pesoAcumulado)
+	{
+		actual.mark();
+		
+		for(int i = 1; i <= actual.edges().size(); i++ )
+		{
+			Edge<K, V> arcoActual = actual.arcos.getElement(i);
+			Vertex<K, V> destino = arcoActual.getDestination();
+			float peso = arcoActual.weight();
+			if(!destino.getMark())
+			{
+				NodoTS<Float, Edge<K, V>> llegadaDestino = tablaResultado.get(destino.getId());
+				if(llegadaDestino == null)
+				{
+					tablaResultado.put(destino.getId(), new NodoTS<Float, Edge<K, V>>(pesoAcumulado + peso, arcoActual));
+					colaIndexada.insert(peso + pesoAcumulado, destino.getId(), arcoActual);
+					
+				}
+				else if(llegadaDestino.getKey() > pesoAcumulado +peso)
+				{
+					llegadaDestino.setKey(pesoAcumulado + peso);
+					llegadaDestino.setValue(arcoActual);
+					colaIndexada.changePriority(destino.getId(), pesoAcumulado + peso, arcoActual);
+				}
+				
+			}
+		}
+	}
+	
+	
+	
 
 }
