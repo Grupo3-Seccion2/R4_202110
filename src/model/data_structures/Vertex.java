@@ -183,6 +183,50 @@ public class Vertex <K extends  Comparable<K>,V extends Comparable<V>> implement
 		}
 	}
 	
+	public void getSCC(ITablaSimbolos<K, Integer> tabla, int idComponente)
+	{
+		mark();
+		tabla.put(id, idComponente);
+		for(int i = 1; i <= arcos.size(); i++)
+		{
+			Vertex<K,V> actual = arcos.getElement(i).getDestination();
+			if(!actual.getMark())
+			{
+				actual.getSCC(tabla, idComponente);
+			}
+		}
+	}
+	
+	public ILista<Edge<K, V>> mstPrimLazy()
+	{
+		ILista<Edge<K, V>> mst = new ArregloDinamico<Edge<K, V>>(10000);
+		MinPQ<Float, Edge<K,V>> cola = new MinPQ<Float, Edge<K,V>>(10000);
+		
+		addEdgesToMinPQ(cola, this);
+		
+		while(!cola.isEmpty())
+		{
+			Edge<K, V> actual = cola.delMin().getValue();
+			Vertex<K, V> dest = actual.getDestination();
+			if(!dest.getMark())
+			{
+				mst.addLast(actual);
+				addEdgesToMinPQ(cola, dest);
+			}
+		}
+		return mst;
+	}
+	
+	public void addEdgesToMinPQ(MinPQ<Float, Edge<K,V>> cola, Vertex<K,V> vertice)
+	{
+		vertice.mark();
+		for(int i = 1; i < vertice.edges().size(); i++)
+		{
+			Edge<K, V>actual = vertice.edges().getElement(i);
+			cola.insert(actual.weight(), actual);
+		}
+	}
+	
 	
 	
 

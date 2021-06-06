@@ -167,4 +167,12 @@ public class GrafoListaAdyacencia <K extends Comparable<K>, V extends Comparable
 		
 		return path;
 	}
+	
+	public ILista<Edge<K,V>> mstPrimLazy(K idOrigen)
+	{
+		ILista<Edge<K, V>> mst = getVertex(idOrigen).mstPrimLazy();
+		unMark();
+		return mst;
+		
+	}
 }
