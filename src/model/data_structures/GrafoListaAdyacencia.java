@@ -39,20 +39,9 @@ public class GrafoListaAdyacencia <K extends Comparable<K>, V extends Comparable
 		Vertex<K,V> destination = getVertex(dest);
 		if(existe == null)
 		{
-
 			origin.addEdge(new Edge<K,V>(origin, destination, weight));
 			destination.addEdge(new Edge<K,V>(destination,origin,weight));
 			numEdges+=2;
-		}
-		else
-		{
-			if(weight>=existe.weight())
-			{
-				origin.addEdge(new Edge<K,V>(origin, destination, weight));
-				destination.addEdge(new Edge<K,V>(destination,origin,weight));
-				numEdges+=2;
-			}
-			
 		}
 	}
 	
@@ -71,6 +60,7 @@ public class GrafoListaAdyacencia <K extends Comparable<K>, V extends Comparable
 		{
 			buscado = salida.getEdge(idD);
 		}
+		int j = 1;
 		return buscado;
 	}
 	
@@ -168,11 +158,17 @@ public class GrafoListaAdyacencia <K extends Comparable<K>, V extends Comparable
 		return path;
 	}
 	
-	public ILista<Edge<K,V>> mstPrimLazy(K idOrigen)
+	public ILista<Edge<K,V>> mstPrim(K idOrigen)
 	{
-		ILista<Edge<K, V>> mst = getVertex(idOrigen).mstPrimLazy();
-		unMark();
-		return mst;
-		
+		if(vertices.contains(idOrigen))
+		{
+			ILista<Edge<K,V>> mst = getVertex(idOrigen).mstPrim();
+			unMark();
+			return mst;
+		}
+		else
+		{
+		  return null;
+		}
 	}
 }

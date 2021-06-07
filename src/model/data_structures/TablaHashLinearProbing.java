@@ -30,14 +30,17 @@ public class TablaHashLinearProbing<K extends Comparable<K>, V extends Comparabl
 		}
 		else
 		{
-			int posicion = hash(key);
-			NodoTS<K,V> nodo = listaNodos.getElement(posicion);
-			if(nodo != null && !nodo.isEmpty())
+			if(!contains(key))
 			{
-				posicion = getNextEmpty(posicion);
+				int posicion = hash(key);
+				NodoTS<K,V> nodo = listaNodos.getElement(posicion);
+				if(nodo != null && !nodo.isEmpty())
+				{
+					posicion = getNextEmpty(posicion);
+				}
+				listaNodos.changeElement(posicion, new NodoTS<>(key, value));
+				tamanoActual ++;
 			}
-			listaNodos.changeElement(posicion, new NodoTS<>(key, value));
-			tamanoActual ++;
 		}
 	}
 

@@ -3,6 +3,10 @@ package controller;
 import java.util.Scanner;
 
 import model.data_structures.GrafoListaAdyacencia;
+import model.data_structures.ILista;
+import model.data_structures.Vertex;
+import model.logic.LandingPointSub;
+import model.logic.LandingPointTerr;
 import model.logic.Model;
 import view.View;
 
@@ -39,30 +43,45 @@ public class Controller
 				switch(option)
 				{
 					case 1:
-						try
-						{
-							
-							modelo.cargarLandingPoints();
-							modelo.cargaConectionsLandingPointsSub();
-							modelo.cargaCountries();
-							view.printMessage("Termino la carga de datos!!");
-							GrafoListaAdyacencia<Integer, String> grafo = modelo.darGrafo();
-							view.printMessage("Se tiene una totalidad de arcos de "+grafo.numEdges());
-							view.printMessage("Se tiene una totalidad de puntos de conexion de "+grafo.numVertices());
-						}
-						catch(Exception e)
-						{
-							e.printStackTrace();
-						}
+						
 						break;
 					case 2:
-						view.printMessage("Ingresar el nombre del punto de conexion:");
-						String nombre = lector.next();
-						int num = modelo.darGradoConectividadDePunto(nombre);
-						view.printMessage("El punto de conexion tiene "+ num+" puntos de conexion adjacentes");
+						view.printMessage("Los landing points submarinos que sirven de interconexion son: ");
+						ILista<Vertex<String, Integer>> landing = modelo.req2();
+						int c = 0;
+						for(int i= 1; i<= landing.size();i++)
+						{
+							LandingPointSub<String,Integer> actual = (LandingPointSub<String,Integer>) landing.getElement(i);
+							view.printMessage("NOMBRE: "+actual.getId()+" PAIS: "+actual.darPais()+" INDENTIFICADOR: "+actual.getInfo());
+							c+= actual.edges().size();
+						}
+						view.printMessage("Con un total de cables conectados de "+c);
 						break;
 							
 					case 3:
+						view.printMessage("Ingresar el nombre de la capital del pais de salida:");
+						String ciudadSal = lector.next();
+						view.printMessage("Ingresar el nombre de la capital del pais de destino:");
+						String ciudadDes = lector.next();
+						modelo.req3(ciudadSal, ciudadDes);
+						break;
+					case 4:
+						modelo.req4();
+						break;
+						
+					case 5:
+						view.printMessage("Ingrese el nombre del landing point a analizar: ");
+						String landingPoint= lector.next();
+						ILista<Vertex<String,Integer>> afectados = modelo.req5(landingPoint);
+						view.printMessage("El numero total de paises afectados son "+afectados.size());
+						for(int i = 1; i<=afectados.size();i++)
+						{
+							LandingPointTerr<String,Integer> actual = (LandingPointTerr<String,Integer>) afectados.getElement(i);
+							view.printMessage(actual.getId());
+						}
+						break;
+					
+					case 6:
 						view.printMessage("--------- \n Hasta pronto !! \n---------"); 
 						lector.close();
 						fin = true;

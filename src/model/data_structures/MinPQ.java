@@ -23,7 +23,9 @@ public class MinPQ <K extends Comparable<K>, V extends Comparable<V>> implements
 				lista.exchange(pos/2, pos);
 			}
 			else
+			{
 				termino = true;
+			}
 			pos = pos / 2;
 		}
 	}
@@ -56,7 +58,7 @@ public class MinPQ <K extends Comparable<K>, V extends Comparable<V>> implements
 			{
 				posMenor = izq;
 			}
-			if(lista.getElement(posMenor).compareTo(lista.getElement(der)) > 0)
+			if(der <= size && lista.getElement(posMenor).compareTo(lista.getElement(der)) > 0)
 			{
 				posMenor = der;
 			}

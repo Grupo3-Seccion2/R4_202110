@@ -63,14 +63,16 @@ public class Vertex <K extends  Comparable<K>,V extends Comparable<V>> implement
 	}
 
 	@Override
-	public Edge<K, V> getEdge(K vertex) {
+	public Edge<K, V> getEdge(K vertex) 
+	{
 		Edge<K,V> temp = null;
-		for (int i = 1; i < arcos.size()  ; i++)
+		boolean encontro = false;
+		for (int i = 1; i <= arcos.size() &&!encontro  ; i++)
 		{
-			if(arcos.getElement(i).getDestination().equals(vertex))
+			if(vertex.compareTo(arcos.getElement(i).getDestination().getId())==0)
 			{
 				temp = arcos.getElement(i);
-				break;
+				encontro = true;
 			}
 		}
 		return temp;
@@ -80,7 +82,7 @@ public class Vertex <K extends  Comparable<K>,V extends Comparable<V>> implement
 	public ILista<Vertex<K, V>> vertices() 
 	{
 		ArregloDinamico<Vertex<K,V>> lista = new ArregloDinamico<Vertex<K, V>>(10000);
-		for (int i = 0; i < arcos.size(); i++) 
+		for (int i = 1; i <= arcos.size(); i++) 
 		{
 			lista.addLast(arcos.getElement(i).getDestination());
 		}
@@ -183,31 +185,16 @@ public class Vertex <K extends  Comparable<K>,V extends Comparable<V>> implement
 		}
 	}
 	
-	public void getSCC(ITablaSimbolos<K, Integer> tabla, int idComponente)
+	public ILista<Edge<K,V>> mstPrim()
 	{
-		mark();
-		tabla.put(id, idComponente);
-		for(int i = 1; i <= arcos.size(); i++)
-		{
-			Vertex<K,V> actual = arcos.getElement(i).getDestination();
-			if(!actual.getMark())
-			{
-				actual.getSCC(tabla, idComponente);
-			}
-		}
-	}
-	
-	public ILista<Edge<K, V>> mstPrimLazy()
-	{
-		ILista<Edge<K, V>> mst = new ArregloDinamico<Edge<K, V>>(10000);
-		MinPQ<Float, Edge<K,V>> cola = new MinPQ<Float, Edge<K,V>>(10000);
+		ILista<Edge<K,V>> mst = new ArregloDinamico<Edge<K,V>>(10);
+		MinPQ<Float,Edge<K,V>> cola = new MinPQ<Float,Edge<K,V>> (20);
 		
 		addEdgesToMinPQ(cola, this);
-		
 		while(!cola.isEmpty())
 		{
-			Edge<K, V> actual = cola.delMin().getValue();
-			Vertex<K, V> dest = actual.getDestination();
+			Edge<K,V> actual = cola.delMin().getValue();
+			Vertex<K,V> dest = actual.getDestination();
 			if(!dest.getMark())
 			{
 				mst.addLast(actual);
@@ -217,17 +204,18 @@ public class Vertex <K extends  Comparable<K>,V extends Comparable<V>> implement
 		return mst;
 	}
 	
-	public void addEdgesToMinPQ(MinPQ<Float, Edge<K,V>> cola, Vertex<K,V> vertice)
+	
+	private void addEdgesToMinPQ(MinPQ<Float, Edge<K,V>> cola, Vertex<K,V> inicio)
 	{
-		vertice.mark();
-		for(int i = 1; i < vertice.edges().size(); i++)
+		inicio.mark();
+		for(int i = 1; i<= inicio.edges().size();i++)
 		{
-			Edge<K, V>actual = vertice.edges().getElement(i);
-			cola.insert(actual.weight(), actual);
+			Edge<K,V> actual = inicio.edges().getElement(i);
+			if(!actual.getDestination().getMark())
+			{
+				cola.insert(actual.weight(),actual);
+			}	
 		}
 	}
-	
-	
-	
 
 }

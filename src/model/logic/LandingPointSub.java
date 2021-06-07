@@ -21,6 +21,10 @@ public class LandingPointSub<K extends Comparable<K>, V extends Comparable<V>> e
 	{
 		return pais;
 	}
+	public String darCiudad()
+	{
+		return ciudad;
+	}
 
 	public double darLongitud()
 	{
